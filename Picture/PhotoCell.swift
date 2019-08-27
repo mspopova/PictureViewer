@@ -9,13 +9,10 @@
 import UIKit
 import Kingfisher
 
-class PhotoCell: UICollectionViewCell {
-    
-
+class PhotoCell: UITableViewCell {
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var ownerLabel: UILabel!
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var photoImageView: UIImageView!
-    
     var imageURL: String? {
         didSet {
             if let imageURL = imageURL, let url = URL(string: imageURL) {
@@ -31,22 +28,4 @@ class PhotoCell: UICollectionViewCell {
         super.prepareForReuse()
         imageURL = nil
     }
-}
-
-extension UIImage {
-    
-    public static func loadFrom(url: URL, completion: @escaping (_ image: UIImage?) -> ()) {
-        DispatchQueue.global().async {
-            if let data = try? Data(contentsOf: url) {
-                DispatchQueue.main.async {
-                    completion(UIImage(data: data))
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completion(nil)
-                }
-            }
-        }
-    }
-    
 }

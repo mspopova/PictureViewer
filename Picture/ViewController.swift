@@ -11,10 +11,9 @@ import MBProgressHUD
 
 
 class ViewController: UIViewController {
-    
-
-    @IBOutlet weak var collectionView: UICollectionView!
-    
+    @IBOutlet weak var tableView: UITableView!
+    var page = 1
+    var fetchingMore = false
     
     var photos = [Photo]()
 
@@ -25,42 +24,71 @@ class ViewController: UIViewController {
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let pictureViewController = segue.destination as? PictureViewController,
-            let indexPath = collectionView.indexPathsForSelectedItems?.first {
+            let indexPath = tableView.indexPathsForSelectedRows?.first {
             pictureViewController.photo = photos[indexPath.row]
         }
     }
 }
 
-// MARK: - UICollectionView
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photos.count
+// MARK: - UITableView
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       return photos.count
     }
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
-        
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! PhotoCell
         let photo = photos[indexPath.row]
         cell.imageURL = photo.bigImageURL
         cell.ownerLabel.text = "by \(photo.owner)"
-        cell.titleLabel.text = photo.title
+        cell.nameLabel.text = photo.title
         return cell
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let offsetY = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height
+
+        if contentHeight - offsetY == scrollView.frame.height{
+            if !fetchingMore {
+                beginBatchFetch()
+            }
+
+        }
+    }
+    func beginBatchFetch() {
+        fetchingMore = true
+        print("beginBatchFetch!")
+        DispatchQueue.main.async( execute: {
+            self.getMoreFlickrPhotos()
+            self.fetchingMore = false
+        })
+    }
  }
 
-//MARK: - progress notiiocation
+//MARK: - progress notification
 extension ViewController {
     func getFlickrPhotos() {
         MBProgressHUD.showAdded(to: view, animated: true)
-        
-        NetManager.fetchFlickrPhotos() { [weak self] photos in
+        NetManager.fetchFlickrPhotos(page: page) { [weak self] photos in
             guard let selfie = self else { return }
             MBProgressHUD.hide(for: selfie.view, animated: true)
-            
+            self!.page += 1
             if let photos = photos {
                 selfie.photos = photos
-                selfie.collectionView.reloadData()
+                selfie.tableView.reloadData()
+            }
+        }
+    }
+    func getMoreFlickrPhotos(){
+        MBProgressHUD.showAdded(to: view, animated: true)
+        NetManager.fetchFlickrPhotos(page: page) { [weak self] photos in
+            guard let selfie = self else { return }
+            MBProgressHUD.hide(for: selfie.view, animated: true)
+            self!.page += 1
+            if let photos = photos {
+                selfie.photos.append(contentsOf: photos)
+                selfie.tableView.reloadData()
             }
         }
     }

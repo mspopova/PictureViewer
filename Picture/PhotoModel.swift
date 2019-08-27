@@ -14,6 +14,7 @@ struct Photo {
     var title: String
     var owner: String
     var dateUpload: String
+    var image: Data?
     
     init?(json: JSON) {
         guard let urlZ = json["url_z"].string,

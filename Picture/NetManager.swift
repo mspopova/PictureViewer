@@ -11,7 +11,8 @@ import Alamofire
 import SwiftyJSON
 
 class NetManager {
-    static func fetchFlickrPhotos(completion: (([Photo]?) -> Void)? = nil) {
+    
+    static func fetchFlickrPhotos(page: Int,completion: (([Photo]?) -> Void)? = nil) {
     let url = URL(string: "https://api.flickr.com/services/rest/")!
     let parameters = [
         "method" : "flickr.interestingness.getList",
@@ -21,6 +22,7 @@ class NetManager {
         "format" : "json",
         "nojsoncallback" : "1",
         "extras": "url_q,url_z,description,date_upload,date_taken,owner_name",
+        "page": "\(page)"
     ]
     
     Alamofire.request(url, method: .get, parameters: parameters)
@@ -33,7 +35,6 @@ class NetManager {
                     completion?(nil)
                     return
                 }
-                
                 let photosJSON = json["photos"]["photo"]
                 let photos = photosJSON.arrayValue.compactMap { Photo(json: $0) }
                 completion?(photos)
