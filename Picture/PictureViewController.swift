@@ -19,17 +19,9 @@ class PictureViewController: UIViewController {
         if let photo = photo, let url = URL(string: photo.bigImageURL) {
             bigImageView.kf.setImage(with: url)
         }
+        let date = photo?.dateUpload
+        dateLabel.text = "Upload date: \(date ?? "unknown")"
+        
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

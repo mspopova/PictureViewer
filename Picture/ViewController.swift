@@ -29,8 +29,6 @@ class ViewController: UIViewController {
             pictureViewController.photo = photos[indexPath.row]
         }
     }
-
-
 }
 
 // MARK: - UICollectionView
@@ -46,10 +44,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
         cell.imageURL = photo.bigImageURL
         cell.ownerLabel.text = "by \(photo.owner)"
         cell.titleLabel.text = photo.title
-        
-    
-        
-        
         return cell
     }
     
