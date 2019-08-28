@@ -27,12 +27,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(ViewController.checkedConnection)
-        print(isConnected)
         if !ViewController.checkedConnection {
-            navigationItem.title = ("pictures offline")
+            navigationItem.title = ("Pictures (offline)")
         } else {
-            navigationItem.title = ("pictures online")
+            navigationItem.title = ("Pictures Daily")
         }
         
         photosBD = realm.objects(Photo.self)
@@ -71,7 +69,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if isConnected {
-            print("we are here tableview called online")
+            //print("we are here tableview called online")
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! PhotoCell
             let photo = photos[indexPath.row]
             cell.imageURL = photo.bigImageURL
@@ -79,7 +77,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             cell.nameLabel.text = photo.title
             return cell
         } else {
-            print("we are here tableview called offline")
+            //print("we are here tableview called offline")
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! PhotoCell
             let photoBD = photosBD[indexPath.row]
             let image = load(fileName: photoBD.bigImageURL)
@@ -100,21 +98,27 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return nil
     }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
-
-        if contentHeight - offsetY == scrollView.frame.height{
+        //print ("\(offsetY), contentHeight: \(contentHeight), phone: \(scrollView.frame.height), razn = \(contentHeight-offsetY)")
+        if contentHeight - offsetY <= scrollView.frame.height*1.5{
             if !fetchingMore {
                 beginBatchFetch()
             }
-
+            
         }
     }
+    
     func beginBatchFetch() {
+        print(isConnected)
+        if !isConnected{
+            return
+        }
         fetchingMore = true
-        print("beginBatchFetch!")
+      //  print("beginBatchFetch!")
         DispatchQueue.main.async( execute: {
             self.getMoreFlickrPhotos()
             self.fetchingMore = false
@@ -126,7 +130,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 extension ViewController {
     func getFlickrPhotos() {
         if Connectivity.isConnectedToInternet {
-            print("Yes! internet is available.")
+      //      print("Yes! internet is available.")
             isConnected = true
             StorageManager.deleteAll()
         } else {
@@ -149,10 +153,11 @@ extension ViewController {
     }
     func getMoreFlickrPhotos(){
         if Connectivity.isConnectedToInternet {
-            print("Yes! internet is available.")
+        //    print("Yes! internet is available.")
             isConnected = true
         } else {
             isConnected = false
+            
         }
         MBProgressHUD.showAdded(to: view, animated: true)
             NetManager.fetchFlickrPhotos(page: page) { [weak self] photos in
