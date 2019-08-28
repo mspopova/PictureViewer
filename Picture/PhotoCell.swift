@@ -16,7 +16,12 @@ class PhotoCell: UITableViewCell {
     var imageURL: String? {
         didSet {
             if let imageURL = imageURL, let url = URL(string: imageURL) {
-                photoImageView.kf.setImage(with: url)
+                let resource = ImageResource(downloadURL: url, cacheKey: imageURL)
+                photoImageView.kf.setImage(with: resource)
+//                KingfisherManager.shared.retrieveImage(with: resource, options: nil, progressBlock: nil, completionHandler: {image, error, cacheType, imageURL in
+//                                        })
+//                photoImageView.kf.setImage(with: url)
+//                print(imageURL)
             } else {
                 photoImageView.image = nil
                 photoImageView.kf.cancelDownloadTask()

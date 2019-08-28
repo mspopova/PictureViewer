@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import Kingfisher
 
 class NetManager {
     
@@ -36,7 +37,15 @@ class NetManager {
                     return
                 }
                 let photosJSON = json["photos"]["photo"]
-                let photos = photosJSON.arrayValue.compactMap { Photo(json: $0) }
+                let photos = photosJSON.arrayValue.compactMap { Photo(json: $0)}
+//                    for photo in photos {
+//                        let url = URL(string: photo.bigImageURL)
+//                        KingfisherManager.shared.retrieveImage(with: url!, options: nil, progressBlock: nil, completionHandler: {image, error, cacheType, imageURL in
+//                        if let data = image?.pngData(){
+//                            photo.image = data
+//                        }
+//                    })
+//                }
                 completion?(photos)
                 
             case .failure(let error):

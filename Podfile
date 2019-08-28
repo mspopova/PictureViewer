@@ -10,6 +10,7 @@ target 'Picture' do
   pod 'SwiftyJSON'
   pod 'MBProgressHUD'
   pod 'Kingfisher'
+  pod 'RealmSwift'
   
 
   

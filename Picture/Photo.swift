@@ -7,16 +7,18 @@
 //
 
 import Foundation
-import  SwiftyJSON
+import SwiftyJSON
+import RealmSwift
+import Kingfisher
 
-struct Photo {
-    var bigImageURL: String
-    var title: String
-    var owner: String
-    var dateUpload: String
-    var image: Data?
+class Photo: Object {
+    @objc dynamic var bigImageURL = " "
+    @objc dynamic var title = " "
+    @objc dynamic var owner = " "
+    @objc dynamic var dateUpload = " "
     
-    init?(json: JSON) {
+    convenience init?(json: JSON) {
+        self.init()
         guard let urlZ = json["url_z"].string,
               let title = json["title"].string,
               let owner = json["ownername"].string,
@@ -29,10 +31,12 @@ struct Photo {
         let dateFormatter : DateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMM d, h:mm a"
         let dateFormatted = dateFormatter.string(from: date)
-        
+    
         self.bigImageURL = urlZ
         self.owner = owner
         self.title = title
         self.dateUpload = dateFormatted
     }
+    
+    
 }
