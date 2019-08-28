@@ -69,7 +69,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if isConnected {
-            //print("we are here tableview called online")
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! PhotoCell
             let photo = photos[indexPath.row]
             cell.imageURL = photo.bigImageURL
@@ -77,7 +76,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             cell.nameLabel.text = photo.title
             return cell
         } else {
-            //print("we are here tableview called offline")
             let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! PhotoCell
             let photoBD = photosBD[indexPath.row]
             let image = load(fileName: photoBD.bigImageURL)
@@ -130,7 +128,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
 extension ViewController {
     func getFlickrPhotos() {
         if Connectivity.isConnectedToInternet {
-      //      print("Yes! internet is available.")
             isConnected = true
             StorageManager.deleteAll()
         } else {
@@ -153,7 +150,6 @@ extension ViewController {
     }
     func getMoreFlickrPhotos(){
         if Connectivity.isConnectedToInternet {
-        //    print("Yes! internet is available.")
             isConnected = true
         } else {
             isConnected = false
