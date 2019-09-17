@@ -7,30 +7,10 @@
 //
 
 import UIKit
-import Kingfisher
 
 class PhotoCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var ownerLabel: UILabel!
     @IBOutlet weak var photoImageView: UIImageView!
-    var imageURL: String? {
-        didSet {
-            if let imageURL = imageURL, let url = URL(string: imageURL) {
-                let resource = ImageResource(downloadURL: url, cacheKey: imageURL)
-                photoImageView.kf.setImage(with: resource)
-//                KingfisherManager.shared.retrieveImage(with: resource, options: nil, progressBlock: nil, completionHandler: {image, error, cacheType, imageURL in
-//                                        })
-//                photoImageView.kf.setImage(with: url)
-//                print(imageURL)
-            } else {
-                photoImageView.image = nil
-                photoImageView.kf.cancelDownloadTask()
-            }
-        }
-    
-    }
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        imageURL = nil
-    }
+
 }

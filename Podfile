@@ -6,13 +6,8 @@ target 'Picture' do
   use_frameworks!
 
   # Pods for Picture
-  pod 'Alamofire'
   pod 'SwiftyJSON'
   pod 'MBProgressHUD'
-  pod 'Kingfisher'
   pod 'RealmSwift'
-  
-
-  
 
 end

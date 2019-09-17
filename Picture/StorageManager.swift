@@ -11,19 +11,14 @@ import RealmSwift
 let realm = try! Realm()
 
 class StorageManager {
-    static func saveObject (_ photo: Photo) {
+    
+     func saveObjects (_ photos: [Photo]) {
         try! realm.write {
-            realm.add(photo)
+            realm.add(photos)
         }
     }
     
-    static func deleteObject(_ photo: Photo){
-        try! realm.write{
-            realm.delete(photo)
-        }
-    }
-    
-    static func deleteAll(){
+     func deleteAll(){
         let realm = try! Realm()
         try! realm.write {
             realm.deleteAll()
